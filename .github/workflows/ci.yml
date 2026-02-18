@@ -24,8 +24,6 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
-  
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -33,25 +31,20 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: '3.11'
 
-      - name: Install deps
+      - name: Install dependencies
         working-directory: backend
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install -r requirements.dev.txt
 
-     - name: Run tests
-  working-directory: backend
-  env:
-    DB_HOST: localhost
-    DB_NAME: appdb
-    DB_USER: app
-    DB_PASSWORD: app
-    DB_PORT: 5432
-  run: |
-    pytest -q
-
-      - name: Build Docker image
-        run: docker build -t logmein-backend ./backend
+      - name: Run tests
+        working-directory: backend
+        env:
+          DB_HOST: localhost
+          DB_NAME: appdb
+          DB_USER: app
+          DB_PASSWORD: app
+          DB_PORT: 5432
+        run: pytest -q
