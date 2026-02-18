@@ -10,19 +10,21 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      db:
+      postgres:
         image: postgres:16
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: logmein
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: app
+          POSTGRES_DB: appdb
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready -U postgres -d logmein"
+          --health-cmd="pg_isready -U app"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
+
+  
 
     steps:
       - name: Checkout code
@@ -43,12 +45,8 @@ jobs:
       - name: Run tests
         working-directory: backend
         env:
-          DB_HOST: db
-          DB_PORT: 5432
-          DB_NAME: logmein
-          DB_USER: postgres
-          DB_PASSWORD: postgres
-        run: pytest -q
+         DATABASE_URL: postgresql://app:app@localhost:5432/appdb       
+        run: pytest 
 
       - name: Build Docker image
         run: docker build -t logmein-backend ./backend
