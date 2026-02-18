@@ -43,10 +43,10 @@ jobs:
           pip install -r requirements.dev.txt
 
       - name: Run tests
-        working-directory: backend
-        env:
-         DATABASE_URL: postgresql://app:app@localhost:5432/appdb       
-        run: pytest 
+  working-directory: backend
+  run: |
+    export DATABASE_URL="postgresql://app:app@localhost:5432/appdb"
+    pytest -q
 
       - name: Build Docker image
         run: docker build -t logmein-backend ./backend
